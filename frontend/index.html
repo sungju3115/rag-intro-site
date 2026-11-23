@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>전승주 | 챗봇 자기소개 (테스트)</title>
+  <style>
+    body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; max-width: 640px; margin: 48px auto; padding: 0 20px; color: #1d1d1f; }
+    textarea { width: 100%; padding: 10px; font: inherit; border: 1px solid #ccc; border-radius: 8px; }
+    button { margin-top: 8px; padding: 8px 16px; border: 0; border-radius: 8px; background: #2f5bea; color: #fff; cursor: pointer; }
+    pre { background: #f6f7fb; padding: 12px; border-radius: 8px; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>챗봇 API 연결 테스트</h1>
+  <p>React 화면으로 교체하기 전, chat-api(POST /chat) 호출을 확인하는 테스트 페이지입니다.</p>
+  <textarea id="q" rows="3">DB 설계는 직접 했나요?</textarea>
+  <button id="send">질문 보내기</button>
+  <pre id="out">응답이 여기에 표시됩니다.</pre>
+  <script>
+    // API Gateway 호출 주소 (배포 후 실제 주소로 설정)
+    const API_URL = 'https://dhr08bkap4.execute-api.ap-northeast-2.amazonaws.com';
+    document.getElementById('send').onclick = async () => {
+      const out = document.getElementById('out');
+      out.textContent = '요청 중...';
+      try {
+        const res = await fetch(API_URL + '/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: document.getElementById('q').value })
+        });
+        out.textContent = JSON.stringify(await res.json(), null, 2);
+      } catch (e) {
+        out.textContent = '요청 실패: ' + e.message;
+      }
+    };
+  </script>
+</body>
+</html>
